@@ -93,6 +93,8 @@ One clean speech recording was mixed with four different noise conditions at 0 d
 
 Enhancement performance was evaluated using the improvement in Scale-Invariant Signal-to-Distortion Ratio (SI-SDR) compared with the original noisy recordings.
 
+Time-frequency overlap (O) measures how much the speech and noise energy occupy the same time-frequency regions. It is a dimensionless measure, where higher values indicate greater overlap between speech and noise. Noise spectral variation (VN) is also dimensionless and measures how much the normalised noise spectrum changes between consecutive time frames.
+
 | Noise | Overlap O | Variation VN | Spectral Subtraction Improvement (dB) | Wiener Improvement (dB) |
 |---|---:|---:|---:|---:|
 | White | 0.039 | 0.047 | 4.54 | 6.48 |
