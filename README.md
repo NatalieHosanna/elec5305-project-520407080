@@ -122,6 +122,17 @@ Noise spectral variation also differed between the four conditions.
 
 Traffic had the highest measured spectral variation, while public-space noise produced the smallest enhancement improvements. This suggests that spectral variation alone may not fully explain enhancement difficulty.
 
+### SI-SDR Improvement Across Noise Conditions
+
+![SI-SDR improvement comparison](results/pilot_sisdr_summary.png)
+
+The figure compares the improvement achieved by spectral subtraction
+and Wiener filtering for the four noise conditions at 0 dB input SNR.
+
+Both methods produced larger SI-SDR improvements for white and kitchen
+noise than for traffic and public-space noise. This shows that mixtures
+with the same overall SNR can respond differently to speech enhancement.
+
 ### Initial Observations
 
 Both spectral subtraction and Wiener filtering improved SI-SDR for the four tested mixtures.
