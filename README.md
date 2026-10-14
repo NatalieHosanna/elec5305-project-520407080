@@ -51,6 +51,8 @@ Three environmental recordings were selected from the 48 kHz DEMAND dataset.
 
 Source: [DEMAND environmental noise database](https://zenodo.org/records/1227121)
 
+**Table 1. Selected background noise conditions and corresponding MATLAB filenames.**
+
 | Noise condition | Original DEMAND recording | MATLAB filename |
 |---|---|---|
 | Kitchen noise | DKITCHEN | `stationary.wav` |
@@ -58,7 +60,7 @@ Source: [DEMAND environmental noise database](https://zenodo.org/records/1227121
 | Public-space noise | PCAFETER | `public_space.wav` |
 | White noise | Generated in MATLAB | No input file required |
 
-The noise conditions are used to organise the experiment. Their actual acoustic properties are measured rather than assumed from their names.
+The four noise conditions used in the initial experiment are summarised in Table 1. These conditions are used to organise the experiment, while their actual acoustic properties are measured rather than assumed from their names.
 
 ## MATLAB Implementation
 
@@ -68,9 +70,9 @@ The script loads the clean speech and noise recordings, creates the mixtures, pe
 
 The mixture is defined as:
 
-\[
+$$
 x[n] = s[n] + \alpha n[n]
-\]
+$$
 
 where `s[n]` is the clean speech signal, `n[n]` is the background noise and `alpha` controls the noise level.
 
@@ -95,6 +97,10 @@ Enhancement performance was evaluated using the improvement in Scale-Invariant S
 
 Time-frequency overlap (O) measures how much the speech and noise energy occupy the same time-frequency regions. It is a dimensionless measure, where higher values indicate greater overlap between speech and noise. Noise spectral variation (VN) is also dimensionless and measures how much the normalised noise spectrum changes between consecutive time frames.
 
+The measured acoustic properties and SI-SDR improvements for the four conditions are presented in Table 2.
+
+**Table 2. Preliminary acoustic measures and SI-SDR improvements for four noise conditions at 0 dB input SNR.**
+
 | Noise | Overlap O | Variation VN | Spectral Subtraction Improvement (dB) | Wiener Improvement (dB) |
 |---|---:|---:|---:|---:|
 | White | 0.039 | 0.047 | 4.54 | 6.48 |
@@ -104,13 +110,25 @@ Time-frequency overlap (O) measures how much the speech and noise energy occupy 
 
 All four mixtures achieved the intended overall SNR of approximately 0 dB.
 
+### SI-SDR Improvement Across Noise Conditions
+
+![SI-SDR improvement comparison](results/pilot_sisdr_summary.png)
+
+*Figure 1. SI-SDR improvement achieved by spectral subtraction and Wiener filtering across four background noise conditions at 0 dB input SNR.*
+
+Figure 1 compares the improvement achieved by both enhancement methods for the four noise conditions. Both methods produced larger SI-SDR improvements for white and kitchen noise than for traffic and public-space noise.
+
+This shows that mixtures with the same overall SNR can respond differently to speech enhancement. The acoustic measures are therefore examined to investigate possible reasons for these differences.
+
 ### Time-Frequency Overlap
 
 ![Time-frequency overlap versus SI-SDR improvement](results/overlap_vs_improvement.png)
 
-The initial results suggest that mixtures with greater time-frequency overlap generally experienced smaller SI-SDR improvements.
+*Figure 2. Relationship between time-frequency overlap and SI-SDR improvement for spectral subtraction and Wiener filtering at 0 dB input SNR.*
 
-Traffic and public-space noise had the highest overlap values and smaller enhancement improvements compared with white and kitchen noise.
+Figure 2 shows the relationship between time-frequency overlap and SI-SDR improvement.
+
+The initial results suggest that mixtures with greater time-frequency overlap generally experienced smaller SI-SDR improvements. Traffic and public-space noise had the highest overlap values and smaller improvements than white and kitchen noise.
 
 However, the relationship was not completely consistent across all four conditions, suggesting that other acoustic properties may also influence enhancement performance.
 
@@ -118,36 +136,32 @@ However, the relationship was not completely consistent across all four conditio
 
 ![Noise spectral variation versus SI-SDR improvement](results/variation_vs_improvement.png)
 
-Noise spectral variation also differed between the four conditions.
+*Figure 3. Relationship between noise spectral variation and SI-SDR improvement for spectral subtraction and Wiener filtering at 0 dB input SNR.*
 
-Traffic had the highest measured spectral variation, while public-space noise produced the smallest enhancement improvements. This suggests that spectral variation alone may not fully explain enhancement difficulty.
+Figure 3 shows how noise spectral variation relates to enhancement performance.
 
-### SI-SDR Improvement Across Noise Conditions
+Traffic had the highest measured spectral variation, while public-space noise produced the smallest enhancement improvements.
 
-![SI-SDR improvement comparison](results/pilot_sisdr_summary.png)
-
-The figure compares the improvement achieved by spectral subtraction
-and Wiener filtering for the four noise conditions at 0 dB input SNR.
-
-Both methods produced larger SI-SDR improvements for white and kitchen
-noise than for traffic and public-space noise. This shows that mixtures
-with the same overall SNR can respond differently to speech enhancement.
+The relationship was less consistent than the trend observed in Figure 2. This suggests that spectral variation alone may not fully explain enhancement difficulty, and that both acoustic measures may need to be considered.
 
 ### Initial Observations
 
-Both spectral subtraction and Wiener filtering improved SI-SDR for the four tested mixtures.
+As shown in Table 2 and Figure 1, both spectral subtraction and Wiener filtering improved SI-SDR for the four tested mixtures.
 
-Wiener filtering produced larger improvements in this initial experiment, although the main purpose of the project is to investigate how acoustic characteristics relate to enhancement performance rather than rank the algorithms.
+Wiener filtering produced larger improvements in this initial experiment. However, the main purpose of the project is to investigate how acoustic characteristics relate to enhancement performance rather than simply rank the algorithms.
 
-These findings are preliminary because only one clean speech recording was tested. The enhancement implementations also require further validation.
+Figures 2 and 3 provide an initial comparison of these relationships. The results suggest that time-frequency overlap may help explain some differences in enhancement performance, while the relationship with noise spectral variation is less consistent.
+
+These findings are preliminary because only one clean speech recording was tested. The enhancement implementations also require further validation before broader conclusions can be drawn.
 
 ## Running the Experiment
 
 1. Place the clean recording in `data/speech/clean.wav`.
-2. Place the three environmental recordings in `data/noise/` using the filenames shown above.
+2. Place the three environmental recordings in `data/noise/` using the filenames shown in Table 1.
 3. Open `matlab/run_pilot.m` in MATLAB and run the script.
 4. Check the generated audio files, spectrograms and `results/pilot_results.csv`.
-5. Run `matlab/plot_pilot_relationships.m` to generate the two SI-SDR improvement graphs.
+5. Run `matlab/plot_pilot_summary.m` to generate Figure 1.
+6. Run `matlab/plot_pilot_relationships.m` to generate Figures 2 and 3.
 
 The experiment uses a sampling rate of 48 kHz. The STFT and enhancement parameters are defined in the MATLAB scripts.
 
