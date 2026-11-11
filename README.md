@@ -150,7 +150,6 @@ ELEC5305_Project/
 │   ├── speech_batch/
 │   └── noise/
 ├── matlab/
-├── literature/
 └── results/
     ├── validation/
     └── extended/
