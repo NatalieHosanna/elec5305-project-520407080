@@ -170,7 +170,48 @@ DeepFilterNet3 was run locally using its Python command-line interface with a pr
 To reproduce the study, obtain the relevant speech and noise recordings, use the preprocessing and mixture-generation settings documented in the report, run the MATLAB experiment scripts, perform DeepFilterNet3 inference on the matched noisy recordings, and evaluate the saved outputs using the corresponding clean references.
 
 The exact MATLAB toolbox requirements, random seed, selected noise channels and software versions should be documented alongside the runnable scripts.
+## Dataset Processing and Reproducibility
 
+The experiment used 40 clean speech recordings from two speakers (`p232` and `p257`), with 20 recordings per speaker.
+
+The environmental noise recordings originated from the DEMAND dataset:
+
+| Source environment | Local filename |
+|---|---|
+| DKITCHEN | `data/noise/stationary.wav` |
+| STRAFFIC | `data/noise/traffic.wav` |
+| PCAFETER | `data/noise/public_space.wav` |
+
+White noise was generated directly in MATLAB.
+
+### Random Seeds
+
+The pilot experiment used MATLAB's Mersenne Twister generator:
+
+`rng(5305, 'twister')`
+
+The expanded white-noise mixtures were reproduced using:
+
+`rng(5305 + 1000*i + q, 'twister')`
+
+Here, `i` is the position of the speech recording in the alphabetically sorted file list, and `q` identifies the noise condition in this order:
+
+1. White
+2. Stationary (kitchen)
+3. Traffic
+4. Public space
+
+### Preprocessing
+
+- Sampling frequency: 48 kHz
+- Multichannel audio converted to mono by averaging channels
+- Speech mean removed and leading/trailing silence trimmed
+- Noise scaled to the target global SNR
+- Identical noise segments used for different SNR levels of the same speech/noise combination
+
+The expanded results file, `results/extended/extended_results.csv`, records the `NoiseStartSample` used for each mixture.
+
+The full dataset is not included in the repository due to its size. Source recordings must be obtained separately and organised using the folder structure above.
 ## Limitations
 
 The study used only two speakers and a limited set of environmental noise recordings. The 640 mixtures reuse the same 40 utterances under multiple experimental conditions and should not be treated as independent speech samples.
