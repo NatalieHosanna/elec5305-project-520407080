@@ -57,9 +57,9 @@ for i = 1:numel(labels)
         try
             % VOICEBOX estimates the noise from the noisy mixture itself.
             z=v_specsub(x,fsTarget);
-            methods{end+1}='VOICEBOX v_specsub'; %#ok<SAGROW>
-            outputs{end+1}=z(:); %#ok<SAGROW>
-            usesCalibration(end+1)=false; %#ok<SAGROW>
+            methods{end+1}='VOICEBOX v_specsub'; 
+            outputs{end+1}=z(:); 
+            usesCalibration(end+1)=false;
         catch ME
             warning('VOICEBOX failed for %s: %s',label,ME.message);
         end
@@ -67,8 +67,6 @@ for i = 1:numel(labels)
     if hasScalart
         try
             % Scalart's function requires initial noise-only samples.
-            % We construct that initialisation using the known pilot noise.
-            % This is REFERENCE-ASSISTED noise-only calibration, not blind use.
             n=x-s;
             prefixLen=round(0.5*fsTarget);
             xWithPrefix=[n(1:prefixLen);x];
@@ -78,9 +76,9 @@ for i = 1:numel(labels)
                 error('Output was shorter than the noise-only prefix.');
             end
             z=z(prefixLen+1:end);
-            methods{end+1}='Scalart decision-directed'; %#ok<SAGROW>
-            outputs{end+1}=z; %#ok<SAGROW>
-            usesCalibration(end+1)=true; %#ok<SAGROW>
+            methods{end+1}='Scalart decision-directed'; 
+            outputs{end+1}=z; 
+            usesCalibration(end+1)=true; 
         catch ME
             warning('Scalart failed for %s: %s',label,ME.message);
         end
