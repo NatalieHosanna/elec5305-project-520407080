@@ -732,7 +732,7 @@ The MATLAB plotting scripts also produce figures showing:
 - Acoustic characteristics versus enhancement performance
 - Spectrogram comparisons for selected individual recordings
 
-Generated files should be checked against the uploaded repository before reproducing the analysis. If a results file is not included, the corresponding script must be run to generate it.
+If a results file is not included, the corresponding script must be run to generate it.
 
 ## Limitations
 
