@@ -1,3 +1,4 @@
+
 # Investigating How Noise Characteristics Affect Speech Enhancement Performance
 
 **ELEC5305 — Audio Signal Processing and Machine Learning**  
@@ -5,26 +6,26 @@ University of Sydney | Research Project | November 2026
 
 ## Project Overview
 
-This project investigates which acoustic characteristics make noisy speech difficult to enhance, even when recordings have the same overall signal-to-noise ratio (SNR).
+This project investigates which acoustic characteristics make noisy speech difficult to enhance, even when recordings have the same overall signal to noise ratio (SNR).
 
 Rather than comparing enhancement algorithms only by noise category, the investigation examines two measurable properties:
 
-- **Time-frequency overlap:** How much speech and interference energy occupy the same time-frequency regions.
+- **Time frequency overlap:** How much speech and interference energy occupy the same time frequency regions.
 - **Noise spectral variation:** How the frequency distribution of background noise changes between consecutive time frames.
 
 Three enhancement methods were evaluated:
 
 - Spectral subtraction
-- Wiener-type filtering
+- Wiener type filtering
 - Pretrained DeepFilterNet3
 
-Enhancement performance was evaluated using Scale-Invariant Signal-to-Distortion Ratio (SI-SDR) and Short-Time Objective Intelligibility (STOI).
+Enhancement performance was evaluated using Scale Invariant Signal to Distortion Ratio (SI-SDR) and Short Time Objective Intelligibility (STOI).
 
 The main goal was to investigate whether these acoustic characteristics help explain why enhancement methods perform differently under the same overall SNR.
 
 ## Research Question
 
-**How do time-frequency overlap and changes in background noise over time affect speech enhancement performance at the same overall SNR, and do traditional and modern enhancement methods experience similar difficulties?**
+**How do time frequency overlap and changes in background noise over time affect speech enhancement performance at the same overall SNR, and do traditional and modern enhancement methods experience similar difficulties?**
 
 ## Experimental Method
 
@@ -41,22 +42,22 @@ The study used clean speech recordings derived from the VCTK corpus, environment
 | Hop size | 256 samples |
 | FFT length | 1024 |
 | Classical gain floor | 0.05 |
-| Enhancement methods | Spectral subtraction, Wiener-type filtering, DeepFilterNet3 |
+| Enhancement methods | Spectral subtraction, Wiener type filtering, DeepFilterNet3 |
 | Performance measures | SI-SDR improvement, STOI improvement |
 
 ### Experimental Workflow
 
 1. Prepare clean speech and environmental noise recordings.
-2. Generate controlled noisy-speech mixtures at the required SNR levels.
-3. Calculate time-frequency overlap, noise spectral variation and an ideal ratio mask for acoustic analysis.
-4. Apply spectral subtraction and Wiener-type filtering in MATLAB.
+2. Generate controlled noisy speech mixtures at the required SNR levels.
+3. Calculate time frequency overlap, noise spectral variation and an ideal ratio mask for acoustic analysis.
+4. Apply spectral subtraction and Wiener type filtering in MATLAB.
 5. Validate the classical implementations against independent reference implementations.
 6. Process the matched noisy recordings using pretrained DeepFilterNet3.
 7. Evaluate the enhanced recordings using SI-SDR and STOI.
 8. Analyse performance across noise conditions, input SNRs, speakers and acoustic descriptors.
 9. Investigate unusual results using numerical measurements and spectrograms.
 
-The classical enhancement methods used noise-power estimates from separately available noise recordings. They are therefore **reference-assisted implementations**, rather than fully blind enhancement systems.
+The classical enhancement methods used noise power estimates from separately available noise recordings. They are therefore **reference assisted implementations**, rather than fully blind enhancement systems.
 
 The external VOICEBOX and Scalart implementations were used as independent comparison methods. They should not be treated as numerically identical versions of the project's algorithms.
 
@@ -65,22 +66,22 @@ The external VOICEBOX and Scalart implementations were used as independent compa
 - [x] Research question and literature review
 - [x] Clean speech and noise preprocessing
 - [x] Controlled SNR mixture generation
-- [x] Initial four-condition pilot experiment
-- [x] Time-frequency overlap calculation
+- [x] Initial pilot experiment with four noise conditions
+- [x] Time frequency overlap calculation
 - [x] Noise spectral variation calculation
 - [x] Ideal ratio mask calculation for acoustic analysis
 - [x] MATLAB spectral subtraction implementation
-- [x] MATLAB Wiener-type filtering implementation
+- [x] MATLAB Wiener type filtering implementation
 - [x] STFT/ISTFT reconstruction checks
 - [x] Input SNR verification
 - [x] Comparison with VOICEBOX spectral subtraction
-- [x] Comparison with Scalart's decision-directed Wiener implementation
+- [x] Comparison with Scalart's decision directed Wiener implementation
 - [x] Expanded classical experiment across 640 mixtures
 - [x] Pretrained DeepFilterNet3 evaluation across 640 matched mixtures
 - [x] SI-SDR and STOI evaluation
-- [x] Mean and standard-deviation analysis
-- [x] Acoustic-property correlation analysis
-- [x] Separate-speaker correlation analysis
+- [x] Mean and standard deviation analysis
+- [x] Acoustic property correlation analysis
+- [x] Separate speaker correlation analysis
 - [x] Enhancement exception analysis
 - [x] Spectrogram investigation of two selected recordings
 - [x] Written Results, Discussion and Conclusion
@@ -139,7 +140,7 @@ MATLAB is used for:
 - Audio preprocessing and resampling
 - Controlled noise mixing
 - STFT and inverse STFT processing
-- Spectral subtraction and Wiener-type filtering
+- Spectral subtraction and Wiener type filtering
 - Acoustic descriptor calculation
 - SI-SDR and STOI evaluation
 - Statistical analysis and plotting
@@ -150,7 +151,7 @@ The implementation uses functions from:
 - Signal Processing Toolbox
 - Audio Toolbox
 
-MATLAB R2024a or later is recommended when using the built-in `stoi` function.
+MATLAB R2024a or later is recommended when using the built in `stoi` function.
 
 ### Python and DeepFilterNet
 
@@ -180,7 +181,7 @@ These implementations are external dependencies for the reference comparison. Th
 
 ### Clean Speech Recordings
 
-The clean speech recordings were obtained from the VoiceBank-DEMAND speech dataset, which contains VCTK-derived speech.
+The clean speech recordings were obtained from the VoiceBank-DEMAND speech dataset, which contains speech derived from VCTK.
 
 Dataset source:
 
@@ -266,13 +267,13 @@ The original full datasets are not included in the repository because of their s
 
 ### Random Seeds
 
-The pilot experiment used MATLAB's Mersenne Twister random-number generator:
+The pilot experiment used MATLAB's Mersenne Twister random number generator:
 
 ```matlab
 rng(5305, 'twister');
 ```
 
-The expanded white-noise mixtures were reproduced using:
+The expanded white noise mixtures were reproduced using:
 
 ```matlab
 rng(5305 + 1000*i + q, 'twister');
@@ -281,7 +282,7 @@ rng(5305 + 1000*i + q, 'twister');
 Here:
 
 - `i` is the speech recording's position in the alphabetically sorted file list.
-- `q` is the noise-condition index.
+- `q` is the noise condition index.
 
 The condition order is:
 
@@ -361,8 +362,8 @@ This script:
 2. Loads or generates the four noise conditions.
 3. Creates mixtures at 0 dB SNR.
 4. Calculates STFT representations.
-5. Measures time-frequency overlap and noise spectral variation.
-6. Applies spectral subtraction and Wiener-type filtering.
+5. Measures time frequency overlap and noise spectral variation.
+6. Applies spectral subtraction and Wiener type filtering.
 7. Calculates SI-SDR measurements.
 8. Saves example enhanced audio and spectrograms.
 
@@ -390,7 +391,7 @@ compare_reference_methods
 
 These comparisons help assess the behaviour of the project implementations.
 
-The reference algorithms differ from the project implementations in processing parameters and noise-estimation procedures. Matching numerical results are therefore not expected.
+The reference algorithms differ from the project implementations in processing parameters and noise estimation procedures. Matching numerical results are therefore not expected.
 
 ### Step 5 — Run the Expanded Experiment
 
@@ -412,8 +413,8 @@ The experiment records:
 
 - Speech recording and noise condition
 - Input SNR
-- Selected noise-segment information
-- Time-frequency overlap
+- Selected noise segment information
+- Time frequency overlap
 - Noise spectral variation
 - Classical enhancement SI-SDR and STOI improvements
 
@@ -548,7 +549,7 @@ analyze_deepfilter_all_snr
 
 This performs the acoustic correlation and exception analysis using the matched enhancement results.
 
-Generate the full-SNR figures using:
+Generate the full SNR figures using:
 
 ```matlab
 plot_deepfilter_all_snr
@@ -587,7 +588,7 @@ At **0 dB input SNR**, the mean results were:
 
 **Mean SI-SDR improvement (dB)**
 
-| Noise | Spectral subtraction | Wiener-type filtering | DeepFilterNet3 |
+| Noise | Spectral subtraction | Wiener type filtering | DeepFilterNet3 |
 |---|---:|---:|---:|
 | White | 4.62 | 6.65 | 14.89 |
 | Kitchen | 3.07 | 4.46 | 16.02 |
@@ -596,7 +597,7 @@ At **0 dB input SNR**, the mean results were:
 
 **Mean STOI improvement**
 
-| Noise | Spectral subtraction | Wiener-type filtering | DeepFilterNet3 |
+| Noise | Spectral subtraction | Wiener type filtering | DeepFilterNet3 |
 |---|---:|---:|---:|
 | White | +0.0046 | +0.0058 | +0.0816 |
 | Kitchen | −0.0032 | −0.0039 | +0.0198 |
@@ -611,7 +612,7 @@ DeepFilterNet generally achieved larger average improvements, but its performanc
 
 ### Acoustic Characteristics
 
-**Time-frequency overlap**
+**Time frequency overlap**
 
 Higher overlap was generally associated with smaller SI-SDR improvements. However, the strength of the relationship varied between noise conditions and was less consistent when evaluating STOI.
 
@@ -632,7 +633,7 @@ Across the 640 matched mixtures:
 | DeepFilterNet3 had lower SI-SDR improvement than at least one classical method | 8 |
 | DeepFilterNet3 had lower STOI improvement than at least one classical method | 58 |
 | DeepFilterNet3 produced negative STOI improvement | 47 |
-| Unique mixtures meeting either classical-method comparison criterion | 65 |
+| Unique mixtures meeting either classical method comparison criterion | 65 |
 
 These categories overlap.
 
@@ -640,17 +641,17 @@ The exception analysis shows that DeepFilterNet's larger average improvements do
 
 ## Individual Case Studies
 
-Two kitchen-noise recordings were selected for closer analysis at 0 dB input SNR.
+Two kitchen noise recordings were selected for closer analysis at 0 dB input SNR.
 
 ### Case Study 1 — p257_284.wav
 
 | Method | SI-SDR improvement (dB) | STOI improvement |
 |---|---:|---:|
 | Spectral subtraction | +3.3504 | −0.00055 |
-| Wiener-type filtering | +4.9345 | −0.00151 |
+| Wiener type filtering | +4.9345 | −0.00151 |
 | DeepFilterNet3 | +2.9077 | +0.01290 |
 
-DeepFilterNet3 produced a smaller SI-SDR improvement than Wiener-type filtering, but achieved a positive STOI change.
+DeepFilterNet3 produced a smaller SI-SDR improvement than Wiener type filtering, but achieved a positive STOI change.
 
 This demonstrates that the method producing the largest SI-SDR improvement is not necessarily the method producing the largest predicted intelligibility improvement.
 
@@ -659,12 +660,12 @@ This demonstrates that the method producing the largest SI-SDR improvement is no
 | Method | SI-SDR improvement (dB) | STOI improvement |
 |---|---:|---:|
 | Spectral subtraction | +0.6489 | −0.03029 |
-| Wiener-type filtering | +0.9413 | −0.03650 |
+| Wiener type filtering | +0.9413 | −0.03650 |
 | DeepFilterNet3 | +9.2852 | −0.02092 |
 
 DeepFilterNet3 substantially improved SI-SDR, but STOI decreased.
 
-The two case studies show that improvements in waveform-level reconstruction do not always correspond to improvements in predicted intelligibility.
+The two case studies show that improvements in waveform level reconstruction do not always correspond to improvements in predicted intelligibility.
 
 The corresponding spectrograms and numerical results are discussed in the project report.
 
@@ -701,13 +702,13 @@ The initial 0 dB SI-SDR improvements were:
 | Traffic | 2.99 | 2.94 |
 | Public space | 2.82 | 2.71 |
 
-These are comparisons between different implementations. Their noise-estimation methods and processing settings differ, so identical numerical results are not expected.
+These are comparisons between different implementations. Their noise estimation methods and processing settings differ, so identical numerical results are not expected.
 
 ### DeepFilterNet Evaluation
 
 The 640 DeepFilterNet outputs were evaluated against matched clean speech recordings.
 
-The evaluation included sampling-rate and alignment checks, SI-SDR improvement, STOI improvement, and comparisons with the classical results.
+The evaluation included sampling rate and alignment checks, SI-SDR improvement, STOI improvement, and comparisons with the classical results.
 
 The saved CSV results provide the underlying numerical measurements used in the report.
 
@@ -721,7 +722,7 @@ The following files are generated by the project scripts and are useful for chec
 | `results/validation/reference_comparison.csv` | External reference implementation comparison |
 | `results/extended/extended_results.csv` | Measurements from the 640-mixture classical experiment |
 | `results/extended/acoustic_correlations_by_noise_snr.csv` | Classical acoustic correlations |
-| `results/extended/acoustic_correlations_by_speaker.csv` | Speaker-specific classical correlations |
+| `results/extended/acoustic_correlations_by_speaker.csv` | Speaker specific classical correlations |
 | `results/extended/all_snr_acoustic_correlations.csv` | Expanded correlations including DeepFilterNet |
 | `results/extended/all_snr_exception_cases.csv` | Individual enhancement exceptions |
 
@@ -742,7 +743,7 @@ Although 640 mixtures were evaluated, the same speech recordings were reused acr
 
 The environmental recordings were also drawn from a limited selection of noise environments.
 
-The classical methods used reference-assisted noise-power estimation, whereas DeepFilterNet3 used a pretrained model. This affects the interpretation of comparisons between the implementations.
+The classical methods used reference assisted noise power estimation, whereas DeepFilterNet3 used a pretrained model. This affects the interpretation of comparisons between the implementations.
 
 Finally, SI-SDR and STOI are objective measures. They do not provide a complete assessment of perceived speech quality.
 
@@ -753,9 +754,9 @@ Future investigations could include:
 - More speakers and independent speech recordings
 - Additional environmental noise recordings
 - Practical noise estimation using only the noisy mixture
-- Further acoustic descriptors based on time-frequency masking
+- Further acoustic descriptors based on time frequency masking
 - Structured listening tests
-- Additional perceptual-quality measures such as ViSQOL
+- Additional perceptual quality measures such as ViSQOL
 - Evaluation on an independent dataset such as NOIZEUS
 
 These would help determine whether the observed relationships generalise beyond the tested conditions.
@@ -771,8 +772,8 @@ These would help determine whether the observed relationships generalise beyond 
 
 - Boll (1979), *Suppression of Acoustic Noise in Speech Using Spectral Subtraction*.
 - Scalart and Vieira Filho (1996), *Speech Enhancement Based on a Priori Signal to Noise Estimation*.
-- Taal et al. (2011), *An Algorithm for Intelligibility Prediction of Time-Frequency Weighted Noisy Speech*.
+- Taal et al. (2011), *An Algorithm for Intelligibility Prediction of Time Frequency Weighted Noisy Speech*.
 - Le Roux et al. (2019), *SDR — Half-Baked or Well Done?*
 - Wang, Narayanan and Wang (2014), *On Training Targets for Supervised Speech Separation*.
-- Liang et al. (2013), *The Optimal Ratio Time-Frequency Mask for Speech Separation in Terms of the Signal-to-Noise Ratio*.
+- Liang et al. (2013), *The Optimal Ratio Time Frequency Mask for Speech Separation in Terms of the Signal-to-Noise Ratio*.
 - Schröter et al. (2022), *DeepFilterNet: A Low Complexity Speech Enhancement Framework for Full-Band Audio Based on Deep Filtering*.
