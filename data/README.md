@@ -14,8 +14,7 @@ The full noise recordings are not included in this
 repository because of their size.
 
 To reproduce the experiments, download the required
-recordings from the original dataset source and place
-them in data/noise/.
+recordings from the Research_Project_Code_520407080 file, which are in the folder noise.
 
 See the main project README for preprocessing and
 experimental settings.
