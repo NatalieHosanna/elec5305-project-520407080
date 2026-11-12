@@ -764,7 +764,7 @@ These would help determine whether the observed relationships generalise beyond 
 
 - [GitHub Repository](https://github.com/NatalieHosanna/elec5305-project-520407080)
 - [Project Website](https://Nataliehosanna.github.io/elec5305-project-520407080/)
-- [Project Video](https://youtu.be/f8KeGnRu8vI)
+- [Project Video](https://youtu.be/rx2VNpIAeMM)
 
 ## Key References
 
