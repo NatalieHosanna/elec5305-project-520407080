@@ -2,7 +2,6 @@
 # Investigating How Noise Characteristics Affect Speech Enhancement Performance
 
 **ELEC5305 — Audio Signal Processing and Machine Learning**  
-University of Sydney | Research Project | November 2026
 
 ## Project Overview
 
