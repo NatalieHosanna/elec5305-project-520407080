@@ -1,5 +1,5 @@
 % ELEC5305 - compare the pilot against independent MATLAB implementations
-% Install VOICEBOX and/or Scalart's code separately before running this file.
+% Uses the included VOICEBOX and WienerNoiseReduction reference implementations.
 % The algorithms use different noise estimators, so this is a benchmark,
 % NOT an exact output-matching test of the original gain functions.
 clearvars; clc; close all;
@@ -96,7 +96,7 @@ for i = 1:numel(labels)
                 error('Output was shorter than the noise-only prefix.');
             end
             z=z(prefixLen+1:end);
-            methods{end+1}='Scalart decision-directed'; 
+            methods{end+1}='Scalart TSNR reference';
             outputs{end+1}=z; 
             usesCalibration(end+1)=true; 
         catch ME
