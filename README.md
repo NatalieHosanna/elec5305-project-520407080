@@ -1,7 +1,7 @@
 
 # Investigating How Noise Characteristics Affect Speech Enhancement Performance
 
-**ELEC5305 — Audio Signal Processing and Machine Learning**  
+**ELEC5305 — Acoustics, Speech and Signal Processing**
 
 ## Project Overview
 
@@ -16,7 +16,7 @@ Three enhancement methods were evaluated:
 
 - Spectral subtraction
 - Wiener type filtering
-- Pretrained DeepFilterNet3
+- Pretrained DeepFilterNet
 
 Enhancement performance was evaluated using Scale Invariant Signal to Distortion Ratio (SI-SDR) and Short Time Objective Intelligibility (STOI).
 
@@ -41,7 +41,7 @@ The study used clean speech recordings derived from the VCTK corpus, environment
 | Hop size | 256 samples |
 | FFT length | 1024 |
 | Classical gain floor | 0.05 |
-| Enhancement methods | Spectral subtraction, Wiener type filtering, DeepFilterNet3 |
+| Enhancement methods | Spectral subtraction, Wiener type filtering, DeepFilterNet |
 | Performance measures | SI-SDR improvement, STOI improvement |
 
 ### Experimental Workflow
@@ -51,7 +51,7 @@ The study used clean speech recordings derived from the VCTK corpus, environment
 3. Calculate time frequency overlap, noise spectral variation and an ideal ratio mask for acoustic analysis.
 4. Apply spectral subtraction and Wiener type filtering in MATLAB.
 5. Validate the classical implementations against independent reference implementations.
-6. Process the matched noisy recordings using pretrained DeepFilterNet3.
+6. Process the matched noisy recordings using pretrained DeepFilterNet.
 7. Evaluate the enhanced recordings using SI-SDR and STOI.
 8. Analyse performance across noise conditions, input SNRs, speakers and acoustic descriptors.
 9. Investigate unusual results using numerical measurements and spectrograms.
@@ -74,9 +74,9 @@ The external VOICEBOX and Scalart implementations were used as independent compa
 - [x] STFT/ISTFT reconstruction checks
 - [x] Input SNR verification
 - [x] Comparison with VOICEBOX spectral subtraction
-- [x] Comparison with Scalart's decision directed Wiener implementation
+- [x] Comparison with the Scalart/Plapous TSNR reference implementation
 - [x] Expanded classical experiment across 640 mixtures
-- [x] Pretrained DeepFilterNet3 evaluation across 640 matched mixtures
+- [x] Pretrained DeepFilterNet evaluation across 640 matched mixtures
 - [x] SI-SDR and STOI evaluation
 - [x] Mean and standard deviation analysis
 - [x] Acoustic property correlation analysis
@@ -91,13 +91,12 @@ The project uses the following folder structure:
 
 ```text
 ELEC5305_Project/
-│
 ├── README.md
-│
 ├── matlab/
 │   ├── run_pilot.m
-│   ├── run_extended_study.m
+│   ├── validate_pilot.m
 │   ├── compare_reference_methods.m
+│   ├── run_extended_study.m
 │   ├── analyse_acoustic_relationships.m
 │   ├── prepare_deepfilter_batch.m
 │   ├── evaluate_deepfilter_all_snr.m
@@ -105,28 +104,26 @@ ELEC5305_Project/
 │   ├── plot_deepfilter_all_snr.m
 │   ├── investigate_failure_cases.m
 │   └── ... other supporting MATLAB scripts
-│
+├── voicebox/                        # VOICEBOX functions on GitHub
+├── wienernoisereduction-2.1.0/      # reference package in local code ZIP
 ├── data/
-│   ├── README.md
-│   ├── speech/
-│   │   └── clean.wav
-│   ├── speech_batch/
-│   │   └── 40 selected clean speech files
+│   ├── speech/clean.wav
+│   ├── speech_batch/                 # 40 selected clean WAV files
 │   └── noise/
 │       ├── stationary.wav
 │       ├── traffic.wav
 │       └── public_space.wav
-│
 └── results/
+    ├── pilot_results.csv
     ├── validation/
     └── extended/
 ```
 
-**Note:** This structure describes the local working project and the directories required to reproduce it. Large input datasets and generated intermediate audio files may not be included in the public repository because of their size.
+**Note:** This tree illustrates the main local layout; it is not a claim that every folder is currently hosted on GitHub. The submitted code ZIP stores VOICEBOX at `sap-voicebox-master/voicebox/`, while the GitHub folder is named `voicebox/`. The reference comparison script supports both layouts. Large source datasets and the generated 640-file intermediate audio folders may be absent from GitHub. Those generated folders are created by the scripts below.
 
 The MATLAB scripts use the project folder as the reference location for data and results.
 
-The `matlab/` folder contains the experimental scripts, supporting functions and plotting scripts.
+The `matlab/` folder contains the experimental scripts, supporting functions and plotting scripts. Third-party reference code is kept separately from the project's own MATLAB scripts.
 
 The `results/` directory contains generated measurements, figures and evaluation outputs.
 
@@ -154,12 +151,14 @@ MATLAB R2024a or later is recommended when using the built in `stoi` function.
 
 ### Python and DeepFilterNet
 
+**Model identity note:** The recorded inference command uses `-m DeepFilterNet`, and the saved enhanced WAV filenames end in `_DeepFilterNet.wav`. The written report identifies the model as *DeepFilterNet3*, but the upstream project distinguishes `DeepFilterNet` from `DeepFilterNet3`. The available commands and WAV names do not verify that DeepFilterNet3 was used. The original model-loading log or model configuration should be checked before making a version-specific claim or treating a fresh run as an exact reproduction.
+
 The modern enhancement experiment used:
 
 - Python 3.11
 - PyTorch and torchaudio
 - DeepFilterNet Python package
-- Pretrained DeepFilterNet3 model
+- Pretrained DeepFilterNet model selected by the recorded `-m DeepFilterNet` argument (architecture version requires confirmation against the original run logs)
 
 Python was used for pretrained DeepFilterNet inference. The experimental analysis and evaluation were carried out in MATLAB.
 
@@ -169,12 +168,12 @@ External implementation:
 
 ### Classical Reference Implementations
 
-The initial MATLAB methods were also compared with:
+The initial MATLAB methods were also compared with third-party code:
 
 - [VOICEBOX](https://github.com/ImperialCollegeLondon/sap-voicebox)
 - [Scalart Wiener Noise Reduction](https://www.mathworks.com/matlabcentral/fileexchange/24462-wiener-filter-for-noise-reduction-and-speech-enhancement)
 
-These implementations are external dependencies for the reference comparison. They are not required to understand the project's own classical processing code.
+The submitted code ZIP includes these external reference implementations, separate from the project's own MATLAB code. The reference script locates VOICEBOX in either `voicebox/` or `sap-voicebox-master/voicebox/`, and the Wiener implementation in `wienernoisereduction-2.1.0/` or the project root. Preserve the original licence and copyright files when copying the third-party code. These implementations are needed for `compare_reference_methods.m`, but not for the project's own classical processing scripts.
 
 ## Dataset Setup
 
@@ -329,7 +328,7 @@ data/speech_batch/
 data/noise/
 ```
 
-If the original datasets are not included, download and prepare them using the instructions above.
+If the original datasets are not included, obtain the specific recordings listed above and prepare them at 48 kHz. For exactly matching the reported results, the original processed audio, the same noise channels and the recorded `NoiseStartSample` positions are needed; downloading a different release or processing different channels can change the measurements.
 
 ### Step 2 — Set Up MATLAB
 
@@ -339,7 +338,6 @@ Run:
 
 ```matlab
 projectDir = pwd;
-
 addpath(fullfile(projectDir, 'matlab'));
 ```
 
@@ -382,15 +380,15 @@ Run the initial validation:
 validate_pilot
 ```
 
-To compare the classical methods against external reference implementations, install VOICEBOX and the Scalart Wiener implementation, add their locations to the MATLAB path and run:
+The submitted ZIP bundles `v_specsub.m` (VOICEBOX) and `WienerNoiseReduction.m` (Scalart/Plapous TSNR reference). A GitHub clone needs the same source files, or an equivalent external installation, for this optional reference-comparison step. `compare_reference_methods.m` automatically adds the supported reference folders to the MATLAB path. Run:
 
 ```matlab
 compare_reference_methods
 ```
 
-These comparisons help assess the behaviour of the project implementations.
+The script checks for both functions before evaluating them. On the tested Mac, the availability checks for both reference functions returned `1`. Those checks confirm the functions can be found; successful completion of `compare_reference_methods` is the stronger check that their required dependencies work. These comparisons help assess the behaviour of the project implementations.
 
-The reference algorithms differ from the project implementations in processing parameters and noise estimation procedures. Matching numerical results are therefore not expected.
+The reference algorithms differ from the project implementations in processing parameters and noise estimation procedures. Matching numerical results are therefore not expected. Retain the original third-party licence and copyright notices with any copies of these functions.
 
 ### Step 5 — Run the Expanded Experiment
 
@@ -446,9 +444,9 @@ plot_extended_study
 
 These scripts generate summary measurements, acoustic correlations and figures describing the expanded experiment.
 
-### Step 6 — Install DeepFilterNet3
+### Step 6 — Install DeepFilterNet
 
-The modern comparison uses the pretrained DeepFilterNet3 implementation.
+The modern comparison uses a pretrained model from the DeepFilterNet framework. The original batch commands shown below selected `DeepFilterNet` explicitly using the `-m` option.
 
 From Windows Command Prompt, open the main project directory.
 
@@ -472,7 +470,7 @@ The complete installation instructions are available from:
 
 The completed experiment used pretrained inference without training or modifying model weights.
 
-The local execution logs identified a DeepFilterNet3 model and checkpoint `model_30.ckpt`, loaded through the `DeepFilterNet` model setting.
+The saved inference commands use `-m DeepFilterNet` and generated outputs with the suffix `_DeepFilterNet.wav`, as expected by the MATLAB evaluation code. The project report calls the pretrained model **DeepFilterNet3**, but the recorded command selects `DeepFilterNet`. These model names are distinct in the upstream software, so the original loading logs or model configuration must be checked before identifying which architecture produced the saved results. The checkpoint filename `model_30.ckpt` alone is not sufficient to identify the model architecture.
 
 ### Step 7 — Prepare the DeepFilterNet Inputs
 
@@ -484,11 +482,15 @@ Generate the matched noisy inputs for the expanded experiment:
 prepare_deepfilter_batch
 ```
 
-For the complete comparison, configure the script to process all 40 speech recordings and all four SNR levels.
+The supplied script is already configured for 40 speech recordings and all four SNR levels (`maxFiles = 40`, `snrLevels = [-5, 0, 5, 10]`).
 
-The generated input files are stored under:
+**These input folders are created when `prepare_deepfilter_batch` is executed. They are not required to already exist in the submitted ZIP or GitHub repository.**
 
-`results/extended/deepfilter_batch_inputs/`
+The generated input files are stored in:
+
+- `results/extended/deepfilter_batch_inputs/noisy/` — 640 noisy recordings
+- `results/extended/deepfilter_batch_inputs/clean/` — 640 matched clean references
+- `results/extended/deepfilter_batch_inputs/batch_manifest.csv` — recording correspondence and scaling information
 
 The expected full experiment contains 640 matched noisy mixtures.
 
@@ -499,20 +501,33 @@ The preparation stage should be checked against the existing experiment results 
 In Windows Command Prompt, from the project directory, an individual recording can be processed using:
 
 ```cmd
-.venv\Scripts\deepFilter.exe -m DeepFilterNet --output-dir "results\extended\deepfilter_batch_outputs" "results\extended\deepfilter_batch_inputs\p232_010_white_0dB_noisy.wav"
+.venv\Scripts\deepFilter.exe -m DeepFilterNet --output-dir "results\extended\deepfilter_batch_outputs" "results\extended\deepfilter_batch_inputs\noisy\p232_010_white_0dB_noisy.wav"
 ```
 
 The enhanced recording is saved in:
 
 `results/extended/deepfilter_batch_outputs/`
 
+The submitted ZIP includes selected example enhanced recordings and CSV results, **not** all 640 intermediate enhanced WAV files. The full output collection must be regenerated if repeating the experiment. For this command, the expected filename suffix is `_DeepFilterNet.wav`, which `evaluate_deepfilter_all_snr.m` searches for.
+
 To process all prepared noisy WAV files using a Windows Command Prompt loop:
 
 ```cmd
-for %F in ("results\extended\deepfilter_batch_inputs\*_noisy.wav") do ".venv\Scripts\deepFilter.exe" -m DeepFilterNet --output-dir "results\extended\deepfilter_batch_outputs" "%~fF"
+for %F in (results\extended\deepfilter_batch_inputs\noisy\*.wav) do ".venv\Scripts\deepFilter.exe" -m DeepFilterNet --output-dir "results\extended\deepfilter_batch_outputs" "%~fF"
 ```
 
-This processes the files individually and can take substantially longer than processing one recording.
+This is **Windows Command Prompt** syntax (for an interactive prompt, use `%F`; in a `.bat` file, use `%%F`). It processes the 640 WAV files individually. The command uses the same `DeepFilterNet` model argument and output naming convention as the saved evaluation. Do not silently change `-m` to another model, because that can change the algorithm and the output suffix.
+
+**macOS/Linux alternative:** Create a virtual environment with `python3 -m venv .venv`, activate it using `source .venv/bin/activate`, and install DeepFilterNet using `python -m pip install deepfilternet` after installing compatible PyTorch dependencies. Once `prepare_deepfilter_batch` has been run in MATLAB, the corresponding shell loop is:
+
+```bash
+mkdir -p results/extended/deepfilter_batch_outputs
+for f in results/extended/deepfilter_batch_inputs/noisy/*.wav; do
+    deepFilter -m DeepFilterNet --output-dir results/extended/deepfilter_batch_outputs "$f"
+done
+```
+
+These commands regenerate intermediate files; they do not require the input folder to be included in the repository. As with the Windows instructions, the exact pretrained model identity must be checked against the model configuration if reproducing the report's model-specific claims.
 
 The complete experiment requires 640 enhanced WAV files.
 
@@ -581,13 +596,13 @@ These checks provide numerical and processing consistency. They do not establish
 
 ### Enhancement Performance
 
-DeepFilterNet3 achieved larger mean SI-SDR and STOI improvements than the classical methods across all 16 tested noise and SNR combinations.
+DeepFilterNet achieved larger mean SI-SDR and STOI improvements than the classical methods across all 16 tested noise and SNR combinations.
 
 At **0 dB input SNR**, the mean results were:
 
 **Mean SI-SDR improvement (dB)**
 
-| Noise | Spectral subtraction | Wiener type filtering | DeepFilterNet3 |
+| Noise | Spectral subtraction | Wiener type filtering | DeepFilterNet |
 |---|---:|---:|---:|
 | White | 4.62 | 6.65 | 14.89 |
 | Kitchen | 3.07 | 4.46 | 16.02 |
@@ -596,7 +611,7 @@ At **0 dB input SNR**, the mean results were:
 
 **Mean STOI improvement**
 
-| Noise | Spectral subtraction | Wiener type filtering | DeepFilterNet3 |
+| Noise | Spectral subtraction | Wiener type filtering | DeepFilterNet |
 |---|---:|---:|---:|
 | White | +0.0046 | +0.0058 | +0.0816 |
 | Kitchen | −0.0032 | −0.0039 | +0.0198 |
@@ -629,9 +644,9 @@ Across the 640 matched mixtures:
 
 | Observation | Count |
 |---|---:|
-| DeepFilterNet3 had lower SI-SDR improvement than at least one classical method | 8 |
-| DeepFilterNet3 had lower STOI improvement than at least one classical method | 58 |
-| DeepFilterNet3 produced negative STOI improvement | 47 |
+| DeepFilterNet had lower SI-SDR improvement than at least one classical method | 8 |
+| DeepFilterNet had lower STOI improvement than at least one classical method | 58 |
+| DeepFilterNet produced negative STOI improvement | 47 |
 | Unique mixtures meeting either classical method comparison criterion | 65 |
 
 These categories overlap.
@@ -648,9 +663,9 @@ Two kitchen noise recordings were selected for closer analysis at 0 dB input SNR
 |---|---:|---:|
 | Spectral subtraction | +3.3504 | −0.00055 |
 | Wiener type filtering | +4.9345 | −0.00151 |
-| DeepFilterNet3 | +2.9077 | +0.01290 |
+| DeepFilterNet | +2.9077 | +0.01290 |
 
-DeepFilterNet3 produced a smaller SI-SDR improvement than Wiener type filtering, but achieved a positive STOI change.
+DeepFilterNet produced a smaller SI-SDR improvement than Wiener type filtering, but achieved a positive STOI change.
 
 This demonstrates that the method producing the largest SI-SDR improvement is not necessarily the method producing the largest predicted intelligibility improvement.
 
@@ -660,9 +675,9 @@ This demonstrates that the method producing the largest SI-SDR improvement is no
 |---|---:|---:|
 | Spectral subtraction | +0.6489 | −0.03029 |
 | Wiener type filtering | +0.9413 | −0.03650 |
-| DeepFilterNet3 | +9.2852 | −0.02092 |
+| DeepFilterNet | +9.2852 | −0.02092 |
 
-DeepFilterNet3 substantially improved SI-SDR, but STOI decreased.
+DeepFilterNet substantially improved SI-SDR, but STOI decreased.
 
 The two case studies show that improvements in waveform level reconstruction do not always correspond to improvements in predicted intelligibility.
 
@@ -694,7 +709,7 @@ The classical MATLAB methods were compared with external implementations from VO
 
 The initial 0 dB SI-SDR improvements were:
 
-| Noise | VOICEBOX (dB) | Scalart Wiener (dB) |
+| Noise | VOICEBOX (dB) | Scalart/Plapous TSNR (dB) |
 |---|---:|---:|
 | White | 9.67 | 10.99 |
 | Kitchen | 8.41 | 13.03 |
@@ -724,6 +739,10 @@ The following files are generated by the project scripts and are useful for chec
 | `results/extended/acoustic_correlations_by_speaker.csv` | Speaker specific classical correlations |
 | `results/extended/all_snr_acoustic_correlations.csv` | Expanded correlations including DeepFilterNet |
 | `results/extended/all_snr_exception_cases.csv` | Individual enhancement exceptions |
+| `results/extended/deepfilter_all_snr_metrics.csv` | All 640 matched enhanced results |
+| `results/extended/deepfilter_all_snr_summary.csv` | Means and standard deviations for the 16 groups |
+| `results/extended/all_snr_sisdr_comparison.png` | Full SNR SI-SDR comparison plot |
+| `results/extended/all_snr_stoi_comparison.png` | Full SNR STOI comparison plot |
 
 The MATLAB plotting scripts also produce figures showing:
 
@@ -742,9 +761,9 @@ Although 640 mixtures were evaluated, the same speech recordings were reused acr
 
 The environmental recordings were also drawn from a limited selection of noise environments.
 
-The classical methods used reference assisted noise power estimation, whereas DeepFilterNet3 used a pretrained model. This affects the interpretation of comparisons between the implementations.
+The classical methods used reference assisted noise power estimation, whereas DeepFilterNet used a pretrained model. This affects the interpretation of comparisons between the implementations.
 
-Finally, SI-SDR and STOI are objective measures. They do not provide a complete assessment of perceived speech quality.
+The exact pretrained model identity and checkpoint version should be verified against the original Python model-loading logs when reproducing the enhanced results. The inference command used for saved outputs is documented above. Finally, SI-SDR and STOI are objective measures; they do not provide a complete assessment of perceived speech quality.
 
 ## Future Work
 
@@ -770,6 +789,7 @@ These would help determine whether the observed relationships generalise beyond 
 
 - Boll (1979), *Suppression of Acoustic Noise in Speech Using Spectral Subtraction*.
 - Scalart and Vieira Filho (1996), *Speech Enhancement Based on a Priori Signal to Noise Estimation*.
+- Plapous et al. (2006), *Improved Signal-to-Noise Ratio Estimation for Speech Enhancement*.
 - Taal et al. (2011), *An Algorithm for Intelligibility Prediction of Time Frequency Weighted Noisy Speech*.
 - Le Roux et al. (2019), *SDR — Half-Baked or Well Done?*
 - Wang, Narayanan and Wang (2014), *On Training Targets for Supervised Speech Separation*.
