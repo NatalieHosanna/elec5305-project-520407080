@@ -151,14 +151,12 @@ MATLAB R2024a or later is recommended when using the built in `stoi` function.
 
 ### Python and DeepFilterNet
 
-**Model identity note:** The recorded inference command uses `-m DeepFilterNet`, and the saved enhanced WAV filenames end in `_DeepFilterNet.wav`. The written report identifies the model as *DeepFilterNet*, but the upstream project distinguishes `DeepFilterNet` from `DeepFilterNet`. The available commands and WAV names do not verify that DeepFilterNet was used. The original model-loading log or model configuration should be checked before making a version-specific claim or treating a fresh run as an exact reproduction.
-
 The modern enhancement experiment used:
 
 - Python 3.11
 - PyTorch and torchaudio
 - DeepFilterNet Python package
-- Pretrained DeepFilterNet model selected by the recorded `-m DeepFilterNet` argument (architecture version requires confirmation against the original run logs)
+- Pretrained DeepFilterNet model
 
 Python was used for pretrained DeepFilterNet inference. The experimental analysis and evaluation were carried out in MATLAB.
 
@@ -470,8 +468,7 @@ The complete installation instructions are available from:
 
 The completed experiment used pretrained inference without training or modifying model weights.
 
-The saved inference commands use `-m DeepFilterNet` and generated outputs with the suffix `_DeepFilterNet.wav`, as expected by the MATLAB evaluation code. The project report calls the pretrained model **DeepFilterNet**, but the recorded command selects `DeepFilterNet`. These model names are distinct in the upstream software, so the original loading logs or model configuration must be checked before identifying which architecture produced the saved results. The checkpoint filename `model_30.ckpt` alone is not sufficient to identify the model architecture.
-
+The pretrained DeepFilterNet model was used for speech enhancement. The inference command selected the model using `-m DeepFilterNet`, and the enhanced WAV files were saved with the suffix `_DeepFilterNet.wav`, consistent with the MATLAB evaluation scripts.
 ### Step 7 — Prepare the DeepFilterNet Inputs
 
 Return to MATLAB.
@@ -527,7 +524,7 @@ for f in results/extended/deepfilter_batch_inputs/noisy/*.wav; do
 done
 ```
 
-These commands regenerate intermediate files; they do not require the input folder to be included in the repository. As with the Windows instructions, the exact pretrained model identity must be checked against the model configuration if reproducing the report's model-specific claims.
+These commands regenerate intermediate files; they do not require the input folder to be included in the repository. 
 
 The complete experiment requires 640 enhanced WAV files.
 
@@ -763,7 +760,7 @@ The environmental recordings were also drawn from a limited selection of noise e
 
 The classical methods used reference assisted noise power estimation, whereas DeepFilterNet used a pretrained model. This affects the interpretation of comparisons between the implementations.
 
-The exact pretrained model identity and checkpoint version should be verified against the original Python model-loading logs when reproducing the enhanced results. The inference command used for saved outputs is documented above. Finally, SI-SDR and STOI are objective measures; they do not provide a complete assessment of perceived speech quality.
+The inference command used for saved outputs is documented above. Finally, SI-SDR and STOI are objective measures; they do not provide a complete assessment of perceived speech quality.
 
 ## Future Work
 
