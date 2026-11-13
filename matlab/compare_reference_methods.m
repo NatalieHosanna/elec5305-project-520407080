@@ -5,7 +5,25 @@
 clearvars; clc; close all;
 
 projectDir = fileparts(fileparts(mfilename('fullpath')));
-addpath(fullfile(projectDir,'matlab'));
+addpath(fullfile(projectDir, 'matlab'));
+% VOICEBOX: GitHub folder
+voiceboxDir = fullfile(projectDir, 'voicebox');
+% VOICEBOX: Original ZIP folder structure
+if ~isfolder(voiceboxDir)
+    voiceboxDir = fullfile(projectDir, ...
+        'sap-voicebox-master', 'voicebox');
+end
+if isfolder(voiceboxDir)
+    addpath(voiceboxDir);
+end
+% Wiener reference implementation
+wienerDir = fullfile(projectDir, ...
+    'wienernoisereduction-2.1.0');
+if isfolder(wienerDir)
+    addpath(wienerDir);
+end
+% Also check the main project folder
+addpath(projectDir);
 resultsDir = fullfile(projectDir,'results');
 validationDir = fullfile(resultsDir,'validation');
 if ~exist(validationDir,'dir'), mkdir(validationDir); end
@@ -17,10 +35,12 @@ hasStoi = exist('stoi','file') == 2;
 fprintf('VOICEBOX v_specsub available: %d\n',hasVoicebox);
 fprintf('Scalart WienerNoiseReduction available: %d\n',hasScalart);
 if ~hasVoicebox && ~hasScalart
-    fprintf(['No external algorithms were found. Read notes/VALIDATION_README.md ' ...
-        'to install one, then rerun this script.\n']);
+    fprintf(['No external reference methods found. ', ...
+        'Install VOICEBOX and/or Scalart, add them ', ...
+        'to the MATLAB path, and rerun this script.\n']);
     return;
 end
+
 
 fsTarget=48000;
 [s,fsS]=audioread(fullfile(projectDir,'data','speech','clean.wav'));
