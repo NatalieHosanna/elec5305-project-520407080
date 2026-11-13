@@ -151,7 +151,7 @@ MATLAB R2024a or later is recommended when using the built in `stoi` function.
 
 ### Python and DeepFilterNet
 
-**Model identity note:** The recorded inference command uses `-m DeepFilterNet`, and the saved enhanced WAV filenames end in `_DeepFilterNet.wav`. The written report identifies the model as *DeepFilterNet3*, but the upstream project distinguishes `DeepFilterNet` from `DeepFilterNet3`. The available commands and WAV names do not verify that DeepFilterNet3 was used. The original model-loading log or model configuration should be checked before making a version-specific claim or treating a fresh run as an exact reproduction.
+**Model identity note:** The recorded inference command uses `-m DeepFilterNet`, and the saved enhanced WAV filenames end in `_DeepFilterNet.wav`. The written report identifies the model as *DeepFilterNet*, but the upstream project distinguishes `DeepFilterNet` from `DeepFilterNet`. The available commands and WAV names do not verify that DeepFilterNet was used. The original model-loading log or model configuration should be checked before making a version-specific claim or treating a fresh run as an exact reproduction.
 
 The modern enhancement experiment used:
 
@@ -470,7 +470,7 @@ The complete installation instructions are available from:
 
 The completed experiment used pretrained inference without training or modifying model weights.
 
-The saved inference commands use `-m DeepFilterNet` and generated outputs with the suffix `_DeepFilterNet.wav`, as expected by the MATLAB evaluation code. The project report calls the pretrained model **DeepFilterNet3**, but the recorded command selects `DeepFilterNet`. These model names are distinct in the upstream software, so the original loading logs or model configuration must be checked before identifying which architecture produced the saved results. The checkpoint filename `model_30.ckpt` alone is not sufficient to identify the model architecture.
+The saved inference commands use `-m DeepFilterNet` and generated outputs with the suffix `_DeepFilterNet.wav`, as expected by the MATLAB evaluation code. The project report calls the pretrained model **DeepFilterNet**, but the recorded command selects `DeepFilterNet`. These model names are distinct in the upstream software, so the original loading logs or model configuration must be checked before identifying which architecture produced the saved results. The checkpoint filename `model_30.ckpt` alone is not sufficient to identify the model architecture.
 
 ### Step 7 — Prepare the DeepFilterNet Inputs
 
