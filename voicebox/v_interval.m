@@ -1,0 +1,82 @@
+function [i,f]=v_interval(x,y,m)
+%V_INTERVAL Classify X values into a set of contiguous intervals with boundaries from Y [I,F]=(X,Y,M)
+%
+% Usage:    x=[1.6 2 3.8 0 6.5];    % test values (not necessarily monotonic)
+%           y=[1 2 3 5 6];          % define boundaries of four unequal intervals (y must be increasing)
+%       [i,f]=v_interval(x,y);      % classify into intervals using default options 'eE'
+%                                   %    i=[1 2 3 1 4] and f=[0.6 0 0.4 -1 1.5]
+%
+%  Inputs:  x(nx)   Vector (or matrix) of test values
+%           y(ny)   Vector of monotonically increasing interval boundaries: interval i is [ y(i) , y(i+1) )
+%           m(nx)   string of mode options
+%                   if x(j)<y(1)
+%                       'e' extrapolate: set i(j)=1 and f(j)<0 [default]
+%                       'c' clip: set i(j)=1 and f(j)=0
+%                       'n' NaN: set i(j)=f(j)=NaN
+%                       'z' zero: set i(j)=0 and f(j)<0
+%                   if x(j)>=y(ny)
+%                       'E' set i(j)=ny-1 and f(j)>1 [default]
+%                       'C' set i(j)=ny-1 and f(j)=1
+%                       'N' set i(j)=f(j)=NaNj
+%                       'Z' set i(j)=ny and f(j)>1
+%
+% Outputs:  i(nx)   Input x(j) lies in the interval  [y(i(j)),y(i(j)+1)]. i() has the same shape as x() and is in the range [1,ny-1] unless 'z' or 'Z' given.
+%           f(nx)   f(j)=(x(j)-y(i(j)))/(y(i(j)+1))-y(i(j))) is the fractional position of x(j) within the interval.
+%                    f() has the same shape as x(). Note that f(j) lies in the range [0,1) provided that y(1) <= x(j) < y(ny)
+%
+
+%	   Copyright (C) Mike Brookes 2025
+%      Version: $Id: v_importsii.m 10865 2018-09-21 17:22:45Z dmb $
+%
+%   VOICEBOX is a MATLAB toolbox for speech processing.
+%   Home page: https://imperialcollegelondon.github.io/sap-voicebox/index.html
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   This program is free software; you can redistribute it and/or modify
+%   it under the terms of the GNU Lesser General Public License as published by
+%   the Free Software Foundation; either version 3 of the License, or
+%   (at your option) any later version.
+%
+%   This program is distributed in the hope that it will be useful,
+%   but WITHOUT ANY WARRANTY; without even the implied warranty of
+%   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%   GNU Lesser General Public License for more details.
+%
+%   You can obtain a copy of the GNU Lesser General Public License from
+%   https://www.gnu.org/licenses/ .
+%    See files gpl-3.0.txt and lgpl-3.0.txt included in this distribution.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if nargin<3
+    m='';
+end
+y=y(:);                             % force y to be a column vector
+[d,e,r]=v_sort([x(:)]);             % find order of x values
+[d,e,j]=v_sort([y; x(:)]);
+ny=numel(y);
+k=j(ny+1:end)-r;                    % next lower element of y for each x (in range [0,ny])
+i=max(min(k,ny-1),1);               % force to lie in range [1,ny-1]
+f=(x(:)-y(i))./(y(i+1)-y(i));       % fractional position within the interval
+klo=k<1;
+if any(klo)                         % If any x's are < y(1) ...
+    if any(m=='c')                  % ... 'c' = clip: set i=ny-1 and f=0    
+        f(klo)=0;              
+    elseif any(m=='n')              % ... 'n' = NaN: set i=NaN and f=NaN
+        i(klo)=NaN;               
+        f(klo)=NaN;
+    elseif any(m=='z')              % ... 'z' = zero: set i=0 and f<0
+        i(klo)=0;
+    end
+end
+khi=k>=ny;                      
+if any(khi)                         % If any x's are > y(end) ...
+    if any(m=='C')                  % ... 'C' = clip: set i=1 and f=0   
+        f(khi)=1;
+    elseif any(m=='N')              % ... 'N' = NaN: set i=NaN and f=NaN
+        i(khi)=NaN;
+        f(khi)=NaN;
+    elseif any(m=='Z')              % ... 'Z' = zero: set i=ny and f>1
+        i(khi)=ny;
+    end
+end
+i=reshape(i,size(x));           % force shape to match x
+f=reshape(f,size(x));           % force shape to match x
